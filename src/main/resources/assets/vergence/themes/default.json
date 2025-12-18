@@ -1,0 +1,12 @@
+{
+  "info": {
+    "id": "default",
+    "name": "Default Theme",
+    "description": "The default theme of Vergence client",
+    "authors": [
+      "Voury",
+      "Onia"
+    ]
+  },
+  "colors": {}
+}
