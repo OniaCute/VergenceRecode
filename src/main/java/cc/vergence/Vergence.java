@@ -5,9 +5,17 @@ import cc.vergence.features.event.impl.client.InitializeEvent;
 import cc.vergence.features.event.impl.client.ShutdownEvent;
 import cc.vergence.features.event.impl.client.UnloadEvent;
 import cc.vergence.features.managers.Manager;
+import cc.vergence.features.managers.impl.client.NotificationManager;
 import cc.vergence.features.managers.impl.client.UrlManager;
+import cc.vergence.features.managers.impl.feature.entity.EntityManager;
+import cc.vergence.features.managers.impl.feature.player.InventoryManager;
+import cc.vergence.features.managers.impl.feature.player.MovementManager;
+import cc.vergence.features.managers.impl.feature.player.RotateManager;
+import cc.vergence.features.managers.impl.feature.render.GuiManager;
+import cc.vergence.features.managers.impl.feature.render.HudManager;
 import cc.vergence.utils.debug.Console;
 import cc.vergence.utils.interfaces.IMinecraft;
+import cc.vergence.utils.maths.RandomUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -19,9 +27,9 @@ public class Vergence implements ModInitializer, IMinecraft {
     public static final ModMetadata MOD_INFO;
     public static final String MOD_ID = "vergence";
     public static final String NAME = "Vergence";
-    public static final String VERSION = "1.0.0";
-    public static final String CONFIG_TEMPLATE_VERSION = "vergence_1_0_vcg_json";
-    public static final String UI_STYLE_VERSION = "vergence_1_0_ui_gird";
+    public static final String VERSION = "2.0.0";
+    public static final String CONFIG_TEMPLATE_VERSION = "vergence_2_0_vcg_json";
+    public static final String UI_STYLE_VERSION = "vergence_2_0_ui_mixed";
     public static final ArrayList<String> AUTHORS = new ArrayList<String>();
     public static String PREFIX = "$";
     public static boolean LOADED = false;
@@ -32,6 +40,13 @@ public class Vergence implements ModInitializer, IMinecraft {
     public static Console CONSOLE;
     public static EventBus EVENTBUS;
     public static UrlManager URL;
+    public static NotificationManager NOTIFY;
+    public static EntityManager ENTITIES;
+    public static InventoryManager INVENTORY;
+    public static MovementManager MOVEMENT;
+    public static RotateManager ROTATION;
+    public static GuiManager GUI;
+    public static HudManager HUD;
 
     // Mod Info Load
     static {
@@ -68,6 +83,13 @@ public class Vergence implements ModInitializer, IMinecraft {
         LOAD_TIME = System.currentTimeMillis();
 
         URL = (UrlManager) registerManager(new UrlManager());
+        NOTIFY = (NotificationManager) registerManager(new NotificationManager());
+        ENTITIES = (EntityManager) registerManager(new EntityManager());
+        INVENTORY = (InventoryManager) registerManager(new InventoryManager());
+        MOVEMENT = (MovementManager) registerManager(new MovementManager());
+        ROTATION = (RotateManager) registerManager(new RotateManager());
+        GUI = (GuiManager) registerManager(new GuiManager());
+        HUD = (HudManager) registerManager(new HudManager());
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             if (LOADED) {
@@ -108,18 +130,7 @@ public class Vergence implements ModInitializer, IMinecraft {
 
     private static Manager registerManager(Manager manager) {
         CONSOLE.logInfo("Loading " + manager.getName() + " ...");
-        if (!manager.onLoad()) {
-            CONSOLE.logError("Manager " + manager.getName() + " is failed to load!");
-            mc.stop();
-            return new Manager() {
-                @Override
-                public boolean onLoad() {
-                    return false;
-                }
-            };
-        } else {
-            EVENTBUS.subscribe(manager);
-        }
+        EVENTBUS.subscribe(manager);
         return manager;
     }
 }

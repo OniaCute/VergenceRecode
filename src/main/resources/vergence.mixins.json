@@ -10,6 +10,15 @@
     "requireAnnotations": true
   },
   "client": [
+    "accessors.render.WorldRendererAccessor",
+    "mixins.client.MixinMinecraftClient",
+    "mixins.client.MixinWindow",
+    "mixins.feature.chat.MixinChatHud",
+    "mixins.feature.chat.MixinChatHudLine",
+    "mixins.feature.chat.MixinChatHudLineVisible",
+    "mixins.feature.chat.MixinChatMessages",
+    "mixins.feature.player.MixinClientPlayerEntity",
+    "mixins.render.MixinGameRenderer",
     "mixins.render.MixinInGameHud"
   ]
 }

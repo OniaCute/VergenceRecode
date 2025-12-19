@@ -13,6 +13,10 @@ import java.time.Duration;
 public final class UrlManager extends Manager {
     private static final HttpClient CLIENT = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).followRedirects(HttpClient.Redirect.NORMAL).build();
 
+    public UrlManager() {
+        super("Url Manager");
+    }
+
     public String get(String url) {
         try {
             HttpRequest req = HttpRequest.newBuilder(URI.create(url)).GET().build();
@@ -48,10 +52,5 @@ public final class UrlManager extends Manager {
         } catch (IOException e) {
             return -1L; // cant connect
         }
-    }
-
-    @Override
-    public boolean onLoad() {
-        return true;
     }
 }
