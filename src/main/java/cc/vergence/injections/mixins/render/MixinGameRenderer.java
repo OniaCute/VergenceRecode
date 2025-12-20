@@ -31,7 +31,6 @@ public abstract class MixinGameRenderer implements IMinecraft {
         Vergence.EVENTBUS.post(new Render3DEvent(matrixStack, tickDelta));
         Render3DUtil.render(Render3DUtil.QUADS, Render3DUtil.LINES, false);
         Render3DUtil.render(Render3DUtil.SHINE_QUADS, Render3DUtil.SHINE_LINES, true);
-//        Vergence.EVENTS.onDraw3D(matrixStack, tickDelta);
         RenderSystem.getModelViewStack().popMatrix();
     }
 }

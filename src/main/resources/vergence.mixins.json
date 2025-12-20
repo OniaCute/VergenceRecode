@@ -19,6 +19,8 @@
     "mixins.feature.chat.MixinChatMessages",
     "mixins.feature.player.MixinClientPlayerEntity",
     "mixins.render.MixinGameRenderer",
-    "mixins.render.MixinInGameHud"
+    "mixins.render.MixinInGameHud",
+    "mixins.render.MixinLivingEntityRenderer",
+    "mixins.feature.network.MixinClientConnection"
   ]
 }

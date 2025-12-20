@@ -5,6 +5,7 @@ import cc.vergence.features.event.impl.client.InitializeEvent;
 import cc.vergence.features.event.impl.client.ShutdownEvent;
 import cc.vergence.features.event.impl.client.UnloadEvent;
 import cc.vergence.features.managers.Manager;
+import cc.vergence.features.managers.impl.client.NetworkManager;
 import cc.vergence.features.managers.impl.client.NotificationManager;
 import cc.vergence.features.managers.impl.client.UrlManager;
 import cc.vergence.features.managers.impl.feature.entity.EntityManager;
@@ -42,6 +43,7 @@ public class Vergence implements ModInitializer, IMinecraft {
     public static UrlManager URL;
     public static NotificationManager NOTIFY;
     public static EntityManager ENTITIES;
+    public static NetworkManager NETWORK;
     public static InventoryManager INVENTORY;
     public static MovementManager MOVEMENT;
     public static RotateManager ROTATION;
@@ -85,6 +87,7 @@ public class Vergence implements ModInitializer, IMinecraft {
         URL = (UrlManager) registerManager(new UrlManager());
         NOTIFY = (NotificationManager) registerManager(new NotificationManager());
         ENTITIES = (EntityManager) registerManager(new EntityManager());
+        NETWORK = (NetworkManager) registerManager(new NetworkManager());
         INVENTORY = (InventoryManager) registerManager(new InventoryManager());
         MOVEMENT = (MovementManager) registerManager(new MovementManager());
         ROTATION = (RotateManager) registerManager(new RotateManager());

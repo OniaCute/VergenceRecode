@@ -29,31 +29,44 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
         Vergence.EVENTBUS.post(new PlayerTickEvent());
     }
 
-    @Inject(method = "sendMovementPackets", at = @At("HEAD"))
+    @Inject(method = "sendMovementPackets", at = @At("HEAD"), cancellable = true)
     public void sendMovementPackets$HEAD(CallbackInfo info) {
         Vec3d currentPosition = getPos();
         float currentYaw = getYaw();
         float currentPitch = getPitch();
         SyncEvent event = new SyncEvent(currentPosition, new Angle(currentPitch, currentYaw));
         Vergence.EVENTBUS.post(event);
-        this.setPos(
-                event.getPosition().x,
-                event.getPosition().y,
-                event.getPosition().z
-        );
-        this.setPitch(event.getAngle().getPitch());
-        this.setYaw(event.getAngle().getYaw());
+        if (event.getPosition() != null) {
+            this.setPos(
+                    event.getPosition().x,
+                    event.getPosition().y,
+                    event.getPosition().z
+            );
+        }
+        if (event.getAngle() != null) {
+            this.setPitch(event.getAngle().getPitch());
+            this.setYaw(event.getAngle().getYaw());
+        }
+        if (event.isCancelled()) {
+            info.cancel();
+        }
     }
 
     @Redirect(method = "sendMovementPackets", at = @At(value = "NEW", target = "(DDDFFZZ)Lnet/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket$Full;", ordinal = 0))
     private PlayerMoveC2SPacket.Full desyncRotationFull(double x, double y, double z, float yaw, float pitch, boolean onGround, boolean horizontalCollision) {
         Vergence.NOTIFY.notify("X", "Redirected Full!", -3);
+        if (!Vergence.ROTATION.isServerRotating()) {
+            return new PlayerMoveC2SPacket.Full(x, y, z, yaw, pitch, onGround, horizontalCollision);
+        }
         return new PlayerMoveC2SPacket.Full(x, y, z, Vergence.ROTATION.getServerAngle().getYaw(), Vergence.ROTATION.getServerAngle().getPitch(), onGround, horizontalCollision);
     }
 
     @Redirect(method = "sendMovementPackets", at = @At(value = "NEW", target = "(FFZZ)Lnet/minecraft/network/packet/c2s/play/PlayerMoveC2SPacket$LookAndOnGround;", ordinal = 0))
     private PlayerMoveC2SPacket.LookAndOnGround desyncRotationLookAndOnGround(float yaw, float pitch, boolean onGround, boolean horizontalCollision) {
         Vergence.NOTIFY.notify("X", "Redirected LookGround!", -3);
+        if (!Vergence.ROTATION.isServerRotating()) {
+            return new PlayerMoveC2SPacket.LookAndOnGround(yaw, pitch, onGround, horizontalCollision);
+        }
         return new PlayerMoveC2SPacket.LookAndOnGround(Vergence.ROTATION.getServerAngle().getYaw(), Vergence.ROTATION.getServerAngle().getPitch(), onGround, horizontalCollision);
     }
 }
